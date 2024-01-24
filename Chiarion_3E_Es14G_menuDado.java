@@ -3,49 +3,63 @@ import java.util.Random;
 
 public class Chiarion_3E_Es14G_menuDado{
     public static void main(String[] args) {
+        /* dichiarazione variabili */
         int scelta;
         int[] vet = new int[2];
         String[] nomi = new String[2];
 
+        /* creazione vettore stringa e lo scanner */
         String[] opzioni={"Gara lancio dadi","[1] Sfida tra due giocatori", "[2] Sfida contro computer", "[3] fine"};
         Scanner keyboard = new Scanner(System.in);
         do {
+            /* visualizzazione delle scelte attraverso il metodo menu */
             ClrScr();
             scelta=menu(opzioni, keyboard);
             Wait(5);
             ClrScr();
+            /* opzioni differenziate in base alla scelta */
             switch(scelta)
             {
                 case 1:
+                    /* richiesta inserimento nomi giocatori */
                     System.out.println("Inserisci il nome del primo giocatore: ");
                     nomi[0]=keyboard.next();
                     System.out.println("Inserisci il nome del secondo giocatore: ");
                     nomi[1]=keyboard.next();
                     ClrScr();
+                    /* estrazione numeri */
                     vet=estrazione();
+                    /* output grafico */
                     printFacce(vet[0], nomi[0]);
                     printFacce(vet[1], nomi[1]);
+                    /* output esito */
                     confronto(vet, nomi);
                     Wait(5);
                     break;
                 case 2:
+                    /* assegnazione nomi giocatore */
                     System.out.println("Inserisci il nome del giocatore: ");
                     nomi[0]=keyboard.next();
                     nomi[1]="computer";
                     ClrScr();
+                    /* estrazione numeri */
                     vet=estrazione();
+                    /* output grafico */
                     printFacce(vet[0], nomi[0]);
+                    /* output risultati */
                     confronto(vet, nomi);
                     Wait(5);
                     break;
-
                 case 3:
+                    /* messaggio di fine programma */
                     System.out.println("Fine programma");
                     break;
             }
         }while(scelta!=3);
     }
 
+    /* metodo per la visualizzazione del menu
+    e della scelta */
     private static int menu(String[] opzioni, Scanner keyboard)
     {
         int scelta;
@@ -68,6 +82,8 @@ public class Chiarion_3E_Es14G_menuDado{
         return scelta;
     }
 
+    /* metodo per l'output del risultato
+    in base ai dadi lanciati */
     private static void confronto(int[] vet, String[] nome)
     {
         System.out.println(nome[0]+": "+vet[0]);
@@ -80,6 +96,7 @@ public class Chiarion_3E_Es14G_menuDado{
             System.out.println("Parità");
     }
 
+    /* metodo che genera l'estrazione di due numeri casuali */
     private static int[] estrazione()
     {
         int[] vet = new int[2];
@@ -91,6 +108,7 @@ public class Chiarion_3E_Es14G_menuDado{
         return vet;
     }
 
+    /* metodo per pulire lo schermo nel CMD */
     private static void ClrScr() {
         try {
             new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
@@ -98,6 +116,8 @@ public class Chiarion_3E_Es14G_menuDado{
             e.printStackTrace();
         }
     }
+
+    /* metodo per l'attesa */
     private static void Wait(int x)
     {
         try{
@@ -107,6 +127,9 @@ public class Chiarion_3E_Es14G_menuDado{
             e.printStackTrace();
         }
     }
+
+    /* metodo per l'output dei dadi in sequenza
+    a scopo grafico */
     private static void printFacce(int num, String nome)
     {
         System.out.println(nome+":");
@@ -122,6 +145,8 @@ public class Chiarion_3E_Es14G_menuDado{
         ClrScr();
     }
 
+    /* metodo per l'output dell'immagine del dado
+    differente in base al valore inserito */
     private static void FacceDado(int faccia)
     {
         switch(faccia)
