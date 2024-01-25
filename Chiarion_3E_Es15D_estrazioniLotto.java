@@ -13,33 +13,89 @@ import java.util.Random;
 
 public class Chiarion_3E_Es15D_estrazioniLotto {
     public static void main(String[] args) {
-        /* dichirazione variabili, scanner e vettori */
-        String[] opzioni={"Estrazioni lotto","[1] Estrazioni ruota di Venezia", "[2] Giocata utente", "[3] verifica vincita", "[4] Visualizza giocate"};
-        String[] opzioni2={"[1] Venezia", "[2] giocatore"};
+        /* dichirazione variabili e vettori */
+        String[] opzioni={"Estrazioni lotto","[1] Estrazioni ruota di Venezia", "[2] Giocata utente", "[3] Verifica vincita", "[4] Visualizza giocate", "[5] Fine"};
         int[] player = new int[5];
-        int[] riferimento = new int[5];
-        int scelta;
+        int[] riferimento = new int[player.length];
+        int[] scelta = new int[2];
+        int cont=0;
+        double puntata=0, premio;
+        /* dichiarazione oggetti */
         Scanner keyboard = new Scanner(System.in);
         Random casuale = new Random();
-        /* menu scelta */
-        scelta=menu(opzioni, keyboard);
-        Wait(5);
 
-        /* possibilità di scelta */
-        switch(scelta)
-        {
-            case 1:
-                player=inputVal(player, keyboard);
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-            default:
-
-        }
+        do {
+            /* menu scelta */
+            scelta[0]=menu(opzioni, keyboard);
+            ClrScr();
+            /* possibilità di scelta */
+            switch(scelta[0])
+            {
+                case 1:
+                    player=inputVal(player, keyboard);//input valori utente
+                    riferimento=valCasuale(riferimento, casuale);//inserimento valori casuali estratti
+                    Wait(3);
+                    break;
+                case 2:
+                    do {
+                        System.out.println("Quanti soldi decidi di puntare?\nRicorda che a partire dall'ambo in poi la tua somma aumenta progressivamente del 5%");
+                        puntata = keyboard.nextInt();
+                    }while(puntata<=0); //controllo della puntata in denaro
+                    player=inputVal(player, keyboard);//input valori utente
+                    riferimento=valCasuale(riferimento, casuale);//inserimento valori casuali estratti
+                    Wait(3);
+                    break;
+                case 3:
+                /* la posizione 1 dell'array di scelta indica la scelta fatta precentemente,
+                così da non porre altre domande all'utente ed eseguire il tutto correttamente */
+                    switch(scelta[1])
+                    {
+                        case 1:
+                            cont=risultato(player, riferimento);
+                            break;
+                        case 2:
+                            cont=risultato(player, riferimento);
+                            premio=ricavo(puntata, cont); //calcolo del montepremi
+                            /* output risultati */
+                            if(premio>puntata)
+                                System.out.printf("\nIl tuo montepremi e' diventato: %.2f€", premio);
+                            else
+                                System.out.printf("\nIl tuo montepremi e' rimasto %.2f€", premio);
+                            break;
+                        default:
+                            System.out.println("Devi prima giocare i tuoi numeri!");
+                    }
+                    Wait(5);
+                    break;
+                case 4:
+                    /* output risultati se è stata fatta una giocata */
+                    if(scelta[1]==1 || scelta[1]==2)
+                    {
+                        System.out.println("Hai giocato i seguenti numeri: ");
+                        stampaNumeri(player);
+                        System.out.println("\nNumeri vincenti: ");
+                        stampaNumeri(riferimento);
+                    }
+                    /* output se non è stata fatta alcuna giocata */
+                    else
+                        System.out.println("Devi fare prima una giocata!");
+                    Wait(7);
+                    break;
+                case 5:
+                    System.out.println("Fine programma");
+                    Wait(3);
+                    break;
+                default:
+                    System.out.println("Valore inserito errato. Riprova.");
+                    Wait(3);
+            }
+            /* se è stata fatta una giocata, l'ultima scelta (tra giocatore e ruota di Venezia)
+             * viene salvata e utilizzata nella verifica e nell'output dei risultati */
+            if(scelta[0]==1 || scelta[0]==2)
+            {
+                scelta[1]=scelta[0];
+            }
+        }while(scelta[0]!=5);
     }
 
     private static int[] inputVal(int[] vet, Scanner keyboard)
@@ -63,7 +119,7 @@ public class Chiarion_3E_Es15D_estrazioniLotto {
         return vet;
     }
 
-    private static int[] casuale(int[] vet, Random casuale)
+    private static int[] valCasuale(int[] vet, Random casuale)
     {
         int check;
         for(int i=0; i<vet.length; i++)
@@ -81,6 +137,56 @@ public class Chiarion_3E_Es15D_estrazioniLotto {
         return vet;
     }
 
+    private static int risultato(int[] vet1, int[] vet2)
+    {
+        int cont=0;
+
+        for(int i=0;i<vet1.length;i++)
+        {
+            if(vet1[i]==vet2[i])
+                cont++;
+        }
+
+        System.out.println("Hai fatto: ");
+        switch(cont)
+        {
+            case 1:
+                System.out.println("Ambata");
+                break;
+            case 2:
+                System.out.println("Ambo");
+            case 3:
+                System.out.println("Terna");
+                break;
+            case 4:
+                System.out.println("Quaterna");
+                break;
+            case 5:
+                System.out.println("Cinquina");
+                break;
+            default:
+                System.out.println("///");
+        }
+
+        return cont;
+    }
+
+    private static double ricavo(double puntata, int cont)
+    {
+        for(int i=0; i<cont;i++)
+        {
+            puntata=puntata+puntata*5/100;
+        }
+        return puntata;
+    }
+
+    private static void stampaNumeri(int[] vet)
+    {
+        for(int i=0;i<vet.length;i++)
+        {
+            System.out.print(vet[i]+"\t");
+        }
+    }
     private static int menu(String[] opzioni, Scanner keyboard)
     {
         int scelta;
