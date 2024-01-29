@@ -49,7 +49,7 @@ public class Chiarion_3E_Es15E_estrazioniLotto {
                 case 2:
                     player = inputVal(player, keyboard); //richiesta inserimento valori
                     check[1]++;//aumento del valore del vettore di controllo
-                    System.out.println("Hai giocato i tuoi valori"); //output di azione completata
+                    System.out.println("Hai giocato i tuoi numeri"); //output di azione completata
                     Wait(3);
                     break;
                 case 3:
@@ -59,6 +59,7 @@ public class Chiarion_3E_Es15E_estrazioniLotto {
                     senza poter barare*/
                     if(controllo(check)==true)
                         risultato(player,riferimento);
+                    Wait(5);
                     break;
                 case 4:
                     if(controllo(check)==true)
@@ -69,17 +70,17 @@ public class Chiarion_3E_Es15E_estrazioniLotto {
                         switch(scelta[1])
                         {
                             case 1:
-                                System.out.println("Numeri estratti ruota di Venezia");
+                                System.out.println("Numeri estratti ruota di Venezia: ");
                                 stampaNumeri(riferimento);
                                 break;
                             case 2:
-                                System.out.println("Numeri giocati dall'utente");
+                                System.out.println("Numeri giocati dall'utente: ");
                                 stampaNumeri(player);
                                 break;
                             case 3:
-                                System.out.println("I tuoi numeri");
+                                System.out.println("I tuoi numeri: ");
                                 stampaNumeri(player);
-                                System.out.println("\nNumeri vincenti");
+                                System.out.println("\nNumeri vincenti:");
                                 stampaNumeri(riferimento);
                                 break;
                             default:
