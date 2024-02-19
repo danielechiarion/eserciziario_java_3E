@@ -10,17 +10,38 @@ public class Chiarion_3E_Es16D_stringMaiusc {
         String[] disney ={"Pippo", "pluto", "Topolino", "qui", "quo", "Qua"};
 
         /* output risultati */
-        System.out.println("\nStringhe che iniziano con la lettera maiuscola:");
-        printInizialeMaiusc(disney);
+        showResult(checkInizialeMaiusc(disney));
     }
 
-    /* metodo che stampa le stringhe
-    * con la iniziale maiuscola */
-    private static void printInizialeMaiusc(String[] vet)
+    /* metodo che restituisce un vettore
+    * con le stringhe che iniziano con la maiuscola */
+    private static String[] checkInizialeMaiusc(String[] vet)
     {
+        /* dichiarazione vettore maiuscole
+        * e relativo indice*/
+        String[] maiuscola = new String[vet.length];
+
         for(int i=0;i<vet.length;i++)
         {
+            /* controllo se la stringa inizia con la maiuscola */
             if(vet[i].charAt(0)>='A' && vet[i].charAt(0)<='Z')
+            {
+                maiuscola[i]=vet[i]; //assegnazione della stringa al vettore maiuscola
+            }
+        }
+
+        return maiuscola;
+    }
+
+    /* metodo che stampa in output le stringhe
+    * che iniziano con la maiuscola */
+    private static void showResult(String[] vet)
+    {
+        System.out.println("\nStringhe che iniziano con la lettera maiuscola: ");
+        for(int i=0;i<vet.length;i++)
+        {
+            //stampa le stringhe del vettore se il contenuto non è nullo
+            if(vet[i]!=null)
                 System.out.println(vet[i]);
         }
     }
