@@ -19,27 +19,32 @@ public class Chiarion_3E_Es20A_dividiStringhe {
 
         /* input stringa */
         System.out.println("Inserisci la stringa: ");
-        input = keyboard.next();
+        input = keyboard.nextLine();
 
         /* divisione stringa in parole */
-        dividiParole(parole, input);
+        parole=dividiParole(parole, input);
 
         /* output risultati */
         printParole(parole);
     }
 
     /* metodo per aggiungere posizioni array */
-    private static void aggiungiPosArray(String[] vet) {
+    private static String[] aggiungiPosArray(String[] vet) {
         /* dichiarazione secondo vettore */
         String[] vet2 = new String[vet.length + 1];
 
-        /* cambio indirizzo a cui punta l'array */
-        vet = vet2;
+        /* copia gli elementi dell'array */
+        for(int i=0;i<vet.length;i++)
+        {
+            vet2[i] = vet[i];
+        }
+
+        return vet2; //ritorno il secondo vettore
     }
 
     /* metodo per suddividere la stringa
      * in un vettore di stringhe */
-    private static void dividiParole(String[] vet, String input) {
+    private static String[] dividiParole(String[] vet, String input) {
         /* dichiarazione e inizializzazione variabili */
         int indexInizio = 0, indexFine;
 
@@ -53,16 +58,17 @@ public class Chiarion_3E_Es20A_dividiStringhe {
                     indexFine++;
 
                 /* aumento posizione vettore */
-                aggiungiPosArray(vet);
-                vet[vet.length - 1] = input.substring(indexInizio, indexFine);
+                vet=aggiungiPosArray(vet);
+                vet[vet.length - 1] = input.substring(indexInizio, indexFine+1);
 
                 /* riassegnazione valori indici
                  * si parte dal carattere nella posizione successiva alla fine */
-                indexInizio = indexInizio + 2; //salto un carattere, che corrisponde allo spazio
-                indexFine = indexInizio;
+                indexInizio = indexFine + 1; //salto un carattere, che corrisponde allo spazio
             } else
                 indexInizio++;
         } while (indexInizio < input.length()); //continua fino a quando non si arriva a fine stringa
+
+        return vet; //ritorno vettore
     }
 
     /* metodo per l'output delle diverse
