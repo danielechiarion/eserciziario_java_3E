@@ -20,6 +20,7 @@ public class Chiarion_3E_Es21A_dataSemplice {
         /* input data utente */
         do {
             System.out.println("Inserisci la data");
+            System.out.println("(Per il mese, se prima di ottobre, occorre mettere uno 0)"); //indicazioni
             inputData = keyboard.nextInt();
             /* messaggio di errore */
             if(!controlloDataInt(inputData))
@@ -43,6 +44,7 @@ public class Chiarion_3E_Es21A_dataSemplice {
     {
         /* dichiarazione costante */
         final int maxlength = 8;
+        final int minlength=7;
         /* dichiarazione variabili */
         boolean result;
         int cont=0;
@@ -54,7 +56,7 @@ public class Chiarion_3E_Es21A_dataSemplice {
             data=data/10;
         }
 
-        if(cont==maxlength) //se il numero di cifre corrisponde, si va avanti
+        if(cont>=minlength && cont<=maxlength) //se il numero di cifre corrisponde, si va avanti
             result=true;
         else //altrimenti darà risultato falso
             result=false;

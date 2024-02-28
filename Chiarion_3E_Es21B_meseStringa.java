@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Chiarion_3E_Es21B_meseStringa {
     public static void main(String[] args) {
         /* dichiarazione variabili */
-        String inputData;
+        int inputData;
         /* creazione scanner */
         Scanner keyboard = new Scanner(System.in);
         /* creazione vettore */
@@ -19,7 +19,8 @@ public class Chiarion_3E_Es21B_meseStringa {
         /* input data utente */
         do {
             System.out.println("Inserisci la data");
-            inputData = keyboard.next();
+            System.out.println("(Per il mese, se prima di ottobre, occorre mettere uno 0)"); //indicazioni
+            inputData = keyboard.nextInt();
             /* messaggio di errore */
             if(!controlloDataInt(inputData))
             {
@@ -38,14 +39,23 @@ public class Chiarion_3E_Es21B_meseStringa {
     /* controllo correttezza data
      * (deve essere lungo otto numeri)
      * restituisce un valore booleano */
-    private static boolean controlloDataInt(String data)
+    private static boolean controlloDataInt(int data)
     {
         /* dichiarazione costante */
         final int maxlength = 8;
+        final int minlength=7;
         /* dichiarazione variabili */
         boolean result;
+        int cont=0;
 
-        if(data.length()==maxlength) //se il numero di cifre corrisponde, si va avanti
+        /* conto quanti numeri sono presenti */
+        while(data!=0)
+        {
+            cont++;//incremento variabile
+            data=data/10;
+        }
+
+        if(cont>=minlength && cont<=maxlength) //se il numero di cifre corrisponde, si va avanti
             result=true;
         else //altrimenti darà risultato falso
             result=false;
@@ -55,7 +65,7 @@ public class Chiarion_3E_Es21B_meseStringa {
 
     /* metodo per dividere la data
      * in giorno, mese, anno */
-    private static int[] dividiData(String inputData)
+    private static int[] dividiData(int inputData)
     {
         /* creazione vettore */
         int[] diviso = new int[3];
@@ -67,8 +77,8 @@ public class Chiarion_3E_Es21B_meseStringa {
          * si parte dalla fine */
         for(int i=diviso.length-1;i>=0; i--)
         {
-            diviso[i]=Integer.parseInt(inputData.substring(inputData.length()-1-step[i])); //prendo la porzione di stringa interessata
-            inputData= inputData.substring(0,inputData.length()-1-step[i]); //tolgo i valori già selezionati
+            diviso[i]=inputData%potenza(10, step[i]); //assegno al valore il resto della divisione
+            inputData=inputData/potenza(10, step[i]); //divido il valore per passare alla nuova operazione
         }
 
         return diviso; //ritorno vettore
