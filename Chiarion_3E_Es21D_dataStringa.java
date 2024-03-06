@@ -10,7 +10,7 @@ public class Chiarion_3E_Es21D_dataStringa {
     public static void main(String[] args) {
         /* dichiarazione variabili */
         int inputData=0;
-        boolean check=false;
+        boolean check;
         /* creazione scanner */
         Scanner keyboard = new Scanner(System.in);
         /* creazione vettore */
@@ -19,16 +19,34 @@ public class Chiarion_3E_Es21D_dataStringa {
 
         /* input data utente */
         do {
-            System.out.println("Inserisci la data");
-            System.out.println("(Per il mese, se prima di ottobre, occorre mettere uno 0)"); //indicazioni
-            try{
-                inputData=keyboard.nextInt();
-            }catch(Exception x)
+            check=false; //inizializzo ogni volta la variabile
+            do {
+                check=false; //inizializzo ogni volta la variabile
+                System.out.println("Inserisci la data");
+                System.out.println("(Per il mese, se prima di ottobre, occorre mettere uno 0)"); //indicazioni
+                try{
+                    inputData=keyboard.nextInt();
+                }catch(Exception x)
+                {
+                    check=true; //cambio variabile
+                    /* messaggio di errore */
+                    messaggioErrore(2);
+                    Wait(3);
+                    ClrScr();
+                    keyboard.nextLine(); //questo comando dà la possibilità di inserire nuovamente il numero
+                }
+            }while(check); //se la data non è del formato intero
+
+            /* controllo lunghezza data */
+            if(!controlloDataInt(inputData)) //se la data non è della lunghezza giusta
             {
+                check=true; //cambio valore alla variabile booleana
+                /* messaggio di errore */
                 messaggioErrore(1);
-                check=true;
+                Wait(3);
+                ClrScr();
             }
-        }while(check); //se la data non ha la giusta lunghezza
+        }while(check); //ripeto nuovamente dall'inizio se la lunghezza non è esatta
 
         /* divisione data */
         dataDivisa=dividiData(inputData);
@@ -164,7 +182,9 @@ public class Chiarion_3E_Es21D_dataStringa {
         /* conversione data in stringa */
         for(int i=0;i<dataDivisa.length;i++)
         {
-            dataStringa+=String.valueOf(dataDivisa[i])+"/";
+            dataStringa+=String.valueOf(dataDivisa[i]);
+            if(i<2)
+                dataStringa+="/";
         }
 
         return dataStringa;
@@ -180,7 +200,9 @@ public class Chiarion_3E_Es21D_dataStringa {
         /* conversione data in stringa */
         for(int i=0;i<dataDivisa.length;i++)
         {
-            dataStringa+=Integer.toString(dataDivisa[i])+"/";
+            dataStringa+=Integer.toString(dataDivisa[i]);
+            if(i<2)
+                dataStringa+="/";
         }
 
         return dataStringa;
@@ -198,7 +220,9 @@ public class Chiarion_3E_Es21D_dataStringa {
         for(int i=0;i<dataDivisa.length;i++)
         {
             boxing = dataDivisa[i];
-            dataStringa+=Integer.toString(boxing)+"/";
+            dataStringa+=Integer.toString(boxing);
+            if(i<2)
+                dataStringa+="/";
         }
 
         return dataStringa;
