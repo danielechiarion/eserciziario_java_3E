@@ -77,6 +77,9 @@ public class Chiarion_3E_Es21F_distanzaDate {
             }
         }
 
+        /* aggiungo giorni anni bisestili */
+        for(int i=dataMin[2];i<dataMag[2] && dataMin[1]<=2;i++)
+            giorniDiff++;
         /* controllo la distanza tra l'una e l'altra data */
         anni = dataMag[2]-dataMin[2];
         /* se non abbiamo un anno di differenza esatto  */
@@ -120,8 +123,6 @@ public class Chiarion_3E_Es21F_distanzaDate {
         for(int i=dataMin[1]; i<dataMin[1]+mesi;i++)
         {
             giorniDiff+=giorniperMese(i, 0);
-            if(controlloBisestile(dataMin[2]) || controlloBisestile(dataMag[2]))
-                giorniDiff++;
         }
 
         /* calcolo giorni */
