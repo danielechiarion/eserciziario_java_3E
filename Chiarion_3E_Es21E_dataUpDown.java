@@ -143,7 +143,10 @@ public class Chiarion_3E_Es21E_dataUpDown {
         if(data1[0]+giorni>giorniperMese(data1[1], data1[2]+anni))
         {
             mesi++;
-            giorni = data1[0]+giorni-giorniperMese(data1[1], data1[2]+anni);
+            if(data1[1]+mesi<=12)
+                giorni = data1[0]+giorni-giorniperMese(data1[1], data1[2]+anni);
+            else
+                giorni = data1[0]+giorni-giorniperMese(data1[1], data1[2]+anni);
         }
         else
             giorni+=data1[0];
@@ -216,7 +219,11 @@ public class Chiarion_3E_Es21E_dataUpDown {
         if(dataDivisa[0]-giorni<=0)
         {
             mesi++; //incremento il contatore di mesi da sottrarre in seguito
-            giorni=giorniperMese(dataDivisa[1], dataDivisa[2]-anni)-(giorni-dataDivisa[0]);
+            /* se non abbiamo una differenza negativa */
+            if(dataDivisa[1]-mesi>0)
+                giorni=giorniperMese(dataDivisa[1]-mesi, dataDivisa[2]-anni)-(giorni-dataDivisa[0]);
+            else //altrimenti cambio il calcolo dei mesi per farlo risultare positivo
+                giorni=giorniperMese(12+dataDivisa[1]-mesi, dataDivisa[2]-anni)-(giorni-dataDivisa[0]);
         }
         else
             giorni=dataDivisa[0]-giorni;
