@@ -107,7 +107,7 @@ public class Chiarion_3E_Es23B_fiammiferiMod {
             /* reinizializzazione variabili */
             fiammiferi=21; //riporto i fiammiferi
             cont=0; //azzero il contatore
-        }while(scelta!= opzioni.length);
+        }while(scelta!= opzioni.length-1);
     }
     /* metodo per inserire il numero di fiammiferi,
      * include controllo try catch */
