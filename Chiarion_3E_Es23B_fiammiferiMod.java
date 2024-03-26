@@ -41,7 +41,7 @@ public class Chiarion_3E_Es23B_fiammiferiMod {
 
                         if(cont%2==0) //tocca al primo giocatore
                             fiammGiocati=inputNum(nome1, keyboard, fiammiferi);
-                        else if(cont%2!=0 && scelta==1) //tocca al secondo giocatore
+                        else if(scelta==1) //tocca al secondo giocatore
                             fiammGiocati=inputNum(nome2, keyboard, fiammiferi);
                         else //tocca al computer
                         {
@@ -55,10 +55,11 @@ public class Chiarion_3E_Es23B_fiammiferiMod {
                         cont++;
                     }
 
-                    if(cont%2==0)
+                    if(cont%2==0 && fiammiferi==0 || cont%2!=0 && fiammiferi==1)
                         System.out.println("Ha vinto "+nome2);
                     else
                         System.out.println("Ha vinto "+nome1);
+                    Wait(3);
                     break;
                 case 3:
                     /* input nome utente */
@@ -73,7 +74,7 @@ public class Chiarion_3E_Es23B_fiammiferiMod {
                         if(cont%2==0) //tocca al computer
                         {
                             if(cont==0) //se è la prima volta, ne toglie 3
-                                fiammGiocati=3;
+                                fiammGiocati=1;
                             else //altrimenti, trova il valore della giocata precedente per arrivare a 4
                                 fiammGiocati=4-giocataPrecedente;
 
@@ -92,12 +93,20 @@ public class Chiarion_3E_Es23B_fiammiferiMod {
                         cont++;
                     }
 
-                    System.out.println("\nMi dispiace, ma il computer vince sempre");
+                    if(cont%2!=0)
+                        System.out.println("\nMi dispiace, ma il computer vince sempre");
+                    else
+                        System.out.println("\nStrano, hai vinto tu");
                     Wait(3);
                     break;
                 default:
                     System.out.println("Arresto del programma");
+                    Wait(3);
             }
+
+            /* reinizializzazione variabili */
+            fiammiferi=21; //riporto i fiammiferi
+            cont=0; //azzero il contatore
         }while(scelta!= opzioni.length);
     }
     /* metodo per inserire il numero di fiammiferi,
