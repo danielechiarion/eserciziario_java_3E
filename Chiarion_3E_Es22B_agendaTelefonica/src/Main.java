@@ -2,6 +2,9 @@ import static tools.utility.*;
 
 import java.util.Scanner;
 public class Main {
+    /* variabili e vettori per
+     * menu della tipologia del telefono */
+    public static String[] tipologia = {"MODALITA' TELEFONO","abitazione", "cellulare", "aziendale"};
     public static void main(String[] args) {
         String[] operazioni = {"VODAFONE", "Inserimento",
                 "Visualizzazione",
@@ -19,9 +22,9 @@ public class Main {
 
         boolean fine=true;
         do {
-            ClrScr();
             switch(menu(operazioni, keyboard)) {
                 case 1:
+                    ClrScr();
                     /* se ho un numero di contratti inferiore al limite,
                      * permetto il reinserimento del contratto */
                     if(contrattiVenduti<nMax){
@@ -31,25 +34,22 @@ public class Main {
                         if(checkContratto(gestore[contrattiVenduti].nome, gestore[contrattiVenduti].cognome, gestore, contrattiVenduti)<0)
                             contrattiVenduti++; //incremento l'indice
                         /* altrimenti restituisco un messaggio */
-                        else{
+                        else
                             System.out.println("Contratto già esistente");
-                            Wait(5);
-                        }
                     }
                     /* altrimenti restituisco un messaggio
                      * di indisponibilità*/
-                    else{
+                    else
                         System.out.println("Gestore telefonico pieno. Non è più possibile inserire numeri");
-                        Wait(5);
-                    }
                     break;
                 case 2:
+                    ClrScr();
                     visualizzaContatti(gestore, contrattiVenduti);
-                    Wait(5);
                     break;
                 case 3:
                     break;
                 case 4:
+                    ClrScr();
                     posContatto = cercaContatto(gestore, contrattiVenduti, keyboard); //trovo la posizione del contratto
                     /* controllo se il contratto presente e' diverso da
                     * -1, quindi se il contratto esiste */
@@ -59,17 +59,27 @@ public class Main {
                         System.out.println("Inserisci il nuovo numero di telefono: ");
                         String nuovoNumero = keyboard.next();
                         gestore[posContatto].telefono=nuovoNumero; //sostuisco il nuovo numero
-                    }
-                    else //messaggio di errore
-                        System.out.println("Contatto non trovato");
+                    }else if(contrattiVenduti>0)
+                        System.out.println("Contratto non trovato");
                     break;
                 case 5:
+                    ClrScr();
                     posContatto = cercaContatto(gestore, contrattiVenduti, keyboard); //trovo la posizione del contratto
-                    gestore[posContatto]=sceltaTipologia(tipologia, keyboard);
+                    /* controllo se il contratto presente e' diverso da
+                     * -1, quindi se il contratto esiste */
+                    if(posContatto>=0){
+                        int sceltaTipologia=sceltaTipologia(keyboard); //ricerca valore
+                        gestore[posContatto].tipo=tipoContratto.valueOf(tipologia[sceltaTipologia]); //assegnazione valore
+                    }
+                    else if(contrattiVenduti>0)
+                        System.out.println("Contratto non trovato");
                     break;
                 default:
+                    ClrScr();
                     fine=false; //cambio valore booleano e esco dal ciclo
+                    System.out.println("Fine programma");
             }
+            Wait(5); //attesa per qualsiasi operazione da compiere
         }while(fine);
     }
 
@@ -77,9 +87,6 @@ public class Main {
      * il numero telefonico della persona */
     private static Contatto leggiPersona(boolean siTel, Scanner keyboard){
         Contatto nuovoContatto = new Contatto(); //dichiarazione oggetto
-        /* variabili e vettori per
-         * menu della tipologia del telefono */
-        String[] tipologia = {"MODALITA' TELEFONO","abitazione", "cellulare", "aziendale"};
 
         /* input dati */
         ClrScr();
@@ -97,7 +104,7 @@ public class Main {
             System.out.println("Inserisci il numero di telefono");
             nuovoContatto.telefono=keyboard.nextLine();
 
-            nuovoContatto.tipo=tipoContratto.valueOf(tipologia[sceltaTipologia(tipologia,keyboard)]);
+            nuovoContatto.tipo=tipoContratto.valueOf(tipologia[sceltaTipologia(keyboard)]);
         }
         /* se non è previsto l'inserimento del telefono,
          * assegnamolo a dei valori di default */
@@ -108,7 +115,7 @@ public class Main {
 
     /* metodo che sceglie la tipologia
     * di telefono da inserire */
-    private static int sceltaTipologia(String[] tipologia, Scanner keyboard){
+    private static int sceltaTipologia(Scanner keyboard){
         int scelta;
 
         /* input tipologia */

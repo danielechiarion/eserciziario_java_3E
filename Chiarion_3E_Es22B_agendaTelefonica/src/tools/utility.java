@@ -30,7 +30,12 @@ public class utility {
             {
                 System.out.println("["+i+"]"+" "+opzioni[i]);
             }
-            scelta = Integer.parseInt(keyboard.nextLine());
+            /* metto un metodo try-catch
+            * perchè ci potrebbero essere degli errori
+            * nello svuotamento del buffer */
+            scelta=Integer.parseInt(keyboard.next());
+            keyboard.nextLine(); //svuoto il buffer
+
             if(scelta<1 || scelta>opzioni.length-1)
             {
                 System.out.println("Valore errato. Riprova");
