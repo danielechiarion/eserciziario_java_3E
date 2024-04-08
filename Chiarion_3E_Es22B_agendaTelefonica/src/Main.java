@@ -6,16 +6,20 @@ public class Main {
         String[] operazioni = {"VODAFONE", "Inserimento",
                 "Visualizzazione",
                 "Ricerca",
+                "Cambia numero di telefono",
+                "Cambia contratto",
                 "Fine"};
 
         final int nMax=3;
         int contrattiVenduti=0;
+        int posContatto;
         Contatto[] gestore = new Contatto[nMax];
 
         Scanner keyboard = new Scanner(System.in);
 
         boolean fine=true;
         do {
+            ClrScr();
             switch(menu(operazioni, keyboard)) {
                 case 1:
                     /* se ho un numero di contratti inferiore al limite,
@@ -24,7 +28,7 @@ public class Main {
                         gestore[contrattiVenduti]=leggiPersona(true, keyboard); //assegno al contatto i valori inseriti
                         /* controllo se il contratto
                         * non è già stato creato */
-                        if(!checkContratto(gestore[contrattiVenduti], gestore, contrattiVenduti))
+                        if(checkContratto(gestore[contrattiVenduti].nome, gestore[contrattiVenduti].cognome, gestore, contrattiVenduti)<0)
                             contrattiVenduti++; //incremento l'indice
                         /* altrimenti restituisco un messaggio */
                         else{
@@ -45,6 +49,24 @@ public class Main {
                     break;
                 case 3:
                     break;
+                case 4:
+                    posContatto = cercaContatto(gestore, contrattiVenduti, keyboard); //trovo la posizione del contratto
+                    /* controllo se il contratto presente e' diverso da
+                    * -1, quindi se il contratto esiste */
+                    if(posContatto>=0){
+                        /* inserimento nuovo
+                        numero di telefono */
+                        System.out.println("Inserisci il nuovo numero di telefono: ");
+                        String nuovoNumero = keyboard.next();
+                        gestore[posContatto].telefono=nuovoNumero; //sostuisco il nuovo numero
+                    }
+                    else //messaggio di errore
+                        System.out.println("Contatto non trovato");
+                    break;
+                case 5:
+                    posContatto = cercaContatto(gestore, contrattiVenduti, keyboard); //trovo la posizione del contratto
+                    gestore[posContatto]=sceltaTipologia(tipologia, keyboard);
+                    break;
                 default:
                     fine=false; //cambio valore booleano e esco dal ciclo
             }
@@ -58,14 +80,13 @@ public class Main {
         /* variabili e vettori per
          * menu della tipologia del telefono */
         String[] tipologia = {"MODALITA' TELEFONO","abitazione", "cellulare", "aziendale"};
-        int scelta;
 
         /* input dati */
         ClrScr();
         System.out.println("Inserisci nome ");
-        nuovoContatto.nome=keyboard.nextLine();
+        nuovoContatto.nome=keyboard.nextLine().toLowerCase();
         System.out.println("Inserisci cognome ");
-        nuovoContatto.cognome=keyboard.nextLine();
+        nuovoContatto.cognome=keyboard.nextLine().toLowerCase();
 
         /* controllo se ha richiesto
          * l'inserimento del numero di telefono */
@@ -76,15 +97,24 @@ public class Main {
             System.out.println("Inserisci il numero di telefono");
             nuovoContatto.telefono=keyboard.nextLine();
 
-            /* input tipologia */
-            scelta=menu(tipologia, keyboard);
-            nuovoContatto.tipo=tipoContratto.valueOf(tipologia[scelta]);
+            nuovoContatto.tipo=tipoContratto.valueOf(tipologia[sceltaTipologia(tipologia,keyboard)]);
         }
         /* se non è previsto l'inserimento del telefono,
          * assegnamolo a dei valori di default */
 
 
         return nuovoContatto;
+    }
+
+    /* metodo che sceglie la tipologia
+    * di telefono da inserire */
+    private static int sceltaTipologia(String[] tipologia, Scanner keyboard){
+        int scelta;
+
+        /* input tipologia */
+        scelta=menu(tipologia, keyboard);
+
+        return scelta;
     }
 
     /* metodo che stampa in output
@@ -106,18 +136,45 @@ public class Main {
 
     /* metodo che controlla se
     * il contratto inserito e' già presente. Ritorna:
-    * - TRUE se l'account è già presente
-    * - FALSE se non è stato ancora creato */
-    private static boolean checkContratto(Contatto contatto, Contatto[] vet, int contrattiVenduti){
+    * - l'indice del valore trovato
+    * - -1 se il contatto non è stato trovato*/
+    private static int checkContratto(String nome, String cognome, Contatto[] vet, int contrattiVenduti){
         /* scorro tutti i valori */
         for(int i=0;i<contrattiVenduti;i++)
         {
             /* se un contratto corrisponde
             * a quello inserito, ritorno il valore */
-            if(contatto.nome.equals(vet[i].nome) && contatto.cognome.equals(vet[i].cognome))
-                return true;
+            if(nome.equals(vet[i].nome) && cognome.equals(vet[i].cognome))
+                return i;
         }
 
-        return false; //altrimenti ritorno l'altro valore
+        return -1; //altrimenti ritorno un valore negativo
+    }
+
+    /* metodo per eseguire
+    * la ricerca di un contatto */
+    private static int cercaContatto(Contatto[] vet, int contrattiVenduti, Scanner keyboard){
+        /* dichiarazione variabili */
+        String nome, cognome;
+
+        /* controllo se il vettore
+        * è vuoto o meno */
+        if(contrattiVenduti==0)
+            System.out.println("Nessun contratto ancora firmato"); //messaggio di errore
+        else{
+            /* richiesta inserimento dati input */
+            System.out.println("Inserisci nome: ");
+            nome = keyboard.nextLine().toLowerCase();
+            System.out.println("Inserisci cognome: ");
+            cognome=keyboard.nextLine().toLowerCase();
+
+            int pos = checkContratto(nome, cognome, vet, contrattiVenduti);
+            /* controllo se
+            * ritorna un valore */
+            if(pos>=0)
+                return pos; //ritorno il vettore di contratti nella posizione trovata
+        }
+
+        return -1; //altrimenti non ritorno nulla
     }
 }
