@@ -6,11 +6,13 @@ public class Main {
      * menu della tipologia del telefono */
     public static String[] tipologia = {"MODALITA' TELEFONO","abitazione", "cellulare", "aziendale"};
     public static void main(String[] args) {
-        String[] operazioni = {"VODAFONE", "Inserimento",
+        String[] operazioni = {"VODAFONE",
+                "Inserimento",
                 "Visualizzazione",
                 "Ricerca",
                 "Cambia numero di telefono",
                 "Cambia contratto",
+                "Elimina contratto",
                 "Fine"};
 
         final int nMax=3;
@@ -47,6 +49,14 @@ public class Main {
                     visualizzaContatti(gestore, contrattiVenduti);
                     break;
                 case 3:
+                    ClrScr();
+                    /* ricerca contatto */
+                    posContatto=cercaContatto(gestore, contrattiVenduti, keyboard);
+                    /* output differenziato */
+                    if(posContatto>=0) //se il contatto è stato trovato
+                        System.out.println(gestore[posContatto].stampa()); //stampa le informazioni del contratto
+                    else
+                        System.out.println("Contratto non trovato"); //altrimenti riporto messaggio di errore
                     break;
                 case 4:
                     ClrScr();
@@ -74,6 +84,17 @@ public class Main {
                     else if(contrattiVenduti>0)
                         System.out.println("Contratto non trovato");
                     break;
+                case 6:
+                    ClrScr();
+                    posContatto = cercaContatto(gestore, contrattiVenduti, keyboard); //ricerca posizione contratto
+                    /* se la posizione non è numero negativo,
+                    * è stato trovato il contatto */
+                    if(posContatto>=0){
+                        cancellaPosArray(posContatto, contrattiVenduti, gestore); //cancello l'elemento nell'array
+                        contrattiVenduti--; //diminuisco il numero di contratti vendutiù
+                        System.out.println("Contatto eliminato con successo"); //output di operazione riuscita
+                    }
+                    break;
                 default:
                     ClrScr();
                     fine=false; //cambio valore booleano e esco dal ciclo
@@ -91,9 +112,9 @@ public class Main {
         /* input dati */
         ClrScr();
         System.out.println("Inserisci nome ");
-        nuovoContatto.nome=keyboard.nextLine().toLowerCase();
+        nuovoContatto.nome=keyboard.nextLine();
         System.out.println("Inserisci cognome ");
-        nuovoContatto.cognome=keyboard.nextLine().toLowerCase();
+        nuovoContatto.cognome=keyboard.nextLine();
 
         /* controllo se ha richiesto
          * l'inserimento del numero di telefono */
@@ -151,7 +172,7 @@ public class Main {
         {
             /* se un contratto corrisponde
             * a quello inserito, ritorno il valore */
-            if(nome.equals(vet[i].nome) && cognome.equals(vet[i].cognome))
+            if(nome.equalsIgnoreCase(vet[i].nome.toLowerCase()) && cognome.equalsIgnoreCase(vet[i].cognome.toLowerCase()))
                 return i;
         }
 
@@ -171,9 +192,9 @@ public class Main {
         else{
             /* richiesta inserimento dati input */
             System.out.println("Inserisci nome: ");
-            nome = keyboard.nextLine().toLowerCase();
+            nome = keyboard.nextLine();
             System.out.println("Inserisci cognome: ");
-            cognome=keyboard.nextLine().toLowerCase();
+            cognome=keyboard.nextLine();
 
             int pos = checkContratto(nome, cognome, vet, contrattiVenduti);
             /* controllo se
@@ -183,5 +204,20 @@ public class Main {
         }
 
         return -1; //altrimenti non ritorno nulla
+    }
+
+    /* metodo che cancella
+    * la posizione di un array */
+    private static void cancellaPosArray(int pos, int contratti, Contatto[] gestore){
+        /* avvio ciclo che,
+        * partendo dalla posizione subito dopo il contratto trovato,
+        * scorre tutti i valori a sinistra */
+        for(int i=pos+1;i<contratti;i++)
+            gestore[i-1]=gestore[i];
+
+        /* se la posizione e' l'ultima,
+        * cancello semplicemente il valore */
+        if(pos==contratti-1)
+            gestore[pos]=null;
     }
 }

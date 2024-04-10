@@ -1,4 +1,4 @@
-enum tipoContratto{abitazione, cellulare, aziendale};
+enum tipoContratto{abitazione, cellulare, aziendale, undefined};
 
 public class Contatto {
     public String nome;
@@ -8,6 +8,11 @@ public class Contatto {
 
     public String stampa()
     {
-        return String.format("Nome: %s Cognome: %s Telefono: %s, tipo: %s", nome, cognome, telefono, tipo.toString());
+        /* aggiungo una condizione
+        per la tipologia di telefono */
+        if(tipo==null)
+            tipo=tipoContratto.undefined; //assegno il valore undefined
+
+        return String.format("Nome: %s\tCognome: %s\nTelefono: %s,\ttipo: %s\n", nome, cognome, telefono, tipo.toString());
     }
 }
