@@ -12,19 +12,22 @@ public class Main {
                 "Ricerca",
                 "Cambia numero di telefono",
                 "Cambia contratto",
-                "Elimina contratto",
+                "Elimina contratto per nome e cognome",
+                "Elimina contratto per numero di telefono",
                 "Fine"};
 
         final int nMax=3;
         int contrattiVenduti=0;
         int posContatto;
+        int scelta;
         Contatto[] gestore = new Contatto[nMax];
 
         Scanner keyboard = new Scanner(System.in);
 
         boolean fine=true;
         do {
-            switch(menu(operazioni, keyboard)) {
+            scelta=menu(operazioni, keyboard);
+            switch(scelta) {
                 case 1:
                     ClrScr();
                     /* se ho un numero di contratti inferiore al limite,
@@ -51,7 +54,7 @@ public class Main {
                 case 3:
                     ClrScr();
                     /* ricerca contatto */
-                    posContatto=cercaContatto(gestore, contrattiVenduti, keyboard);
+                    posContatto=cercaContatto(gestore, contrattiVenduti, keyboard, false);
                     /* output differenziato */
                     if(posContatto>=0) //se il contatto è stato trovato
                         System.out.println(gestore[posContatto].stampa()); //stampa le informazioni del contratto
@@ -60,7 +63,7 @@ public class Main {
                     break;
                 case 4:
                     ClrScr();
-                    posContatto = cercaContatto(gestore, contrattiVenduti, keyboard); //trovo la posizione del contratto
+                    posContatto = cercaContatto(gestore, contrattiVenduti, keyboard, false); //trovo la posizione del contratto
                     /* controllo se il contratto presente e' diverso da
                     * -1, quindi se il contratto esiste */
                     if(posContatto>=0){
@@ -74,7 +77,7 @@ public class Main {
                     break;
                 case 5:
                     ClrScr();
-                    posContatto = cercaContatto(gestore, contrattiVenduti, keyboard); //trovo la posizione del contratto
+                    posContatto = cercaContatto(gestore, contrattiVenduti, keyboard, false); //trovo la posizione del contratto
                     /* controllo se il contratto presente e' diverso da
                      * -1, quindi se il contratto esiste */
                     if(posContatto>=0){
@@ -84,9 +87,15 @@ public class Main {
                     else if(contrattiVenduti>0)
                         System.out.println("Contratto non trovato");
                     break;
-                case 6:
+                case 6,7:
                     ClrScr();
-                    posContatto = cercaContatto(gestore, contrattiVenduti, keyboard); //ricerca posizione contratto
+                    /* verifico se ricercare per nome e cognome
+                    * o per telefono */
+                    if(scelta==6)
+                        posContatto = cercaContatto(gestore, contrattiVenduti, keyboard, false); //ricerca posizione contratto
+                    else
+                        posContatto = cercaContatto(gestore, contrattiVenduti, keyboard, true); //ricerca posizione contratto
+
                     /* se la posizione non è numero negativo,
                     * è stato trovato il contatto */
                     if(posContatto>=0){
@@ -179,26 +188,53 @@ public class Main {
         return -1; //altrimenti ritorno un valore negativo
     }
 
+    /* metodo che trova il contatto
+    * utilizzando il numero di telefono */
+    private static int trovaTel(String tel, Contatto[] vet, int contrattiVenduti){
+        /* scorro tutti i valori */
+        for(int i=0;i<contrattiVenduti;i++)
+        {
+            /* se un contratto corrisponde
+             * a quello inserito, ritorno il valore */
+            if(tel.equals(vet[i].telefono))
+                return i;
+        }
+
+        return -1; //altrimenti ritorno un valore negativo
+    }
+
     /* metodo per eseguire
-    * la ricerca di un contatto */
-    private static int cercaContatto(Contatto[] vet, int contrattiVenduti, Scanner keyboard){
+    * la ricerca di un contatto.
+    * Si mette cercaTel a TRUE per cercare utilizzando il telefono
+    * Si mette cercaTel a FALSE per eseguire la classica ricerca per nome o cognome */
+    private static int cercaContatto(Contatto[] vet, int contrattiVenduti, Scanner keyboard, boolean cercaTel){
         /* dichiarazione variabili */
-        String nome, cognome;
+        String nome, cognome, telefono;
+        int pos;
 
         /* controllo se il vettore
         * è vuoto o meno */
         if(contrattiVenduti==0)
             System.out.println("Nessun contratto ancora firmato"); //messaggio di errore
         else{
-            /* richiesta inserimento dati input */
-            System.out.println("Inserisci nome: ");
-            nome = keyboard.nextLine();
-            System.out.println("Inserisci cognome: ");
-            cognome=keyboard.nextLine();
+            if(!cercaTel){ //se si cerca contratto per nome e cognome
+                /* richiesta inserimento dati input */
+                System.out.println("Inserisci nome: ");
+                nome = keyboard.nextLine();
+                System.out.println("Inserisci cognome: ");
+                cognome=keyboard.nextLine();
 
-            int pos = checkContratto(nome, cognome, vet, contrattiVenduti);
-            /* controllo se
-            * ritorna un valore */
+                pos = checkContratto(nome, cognome, vet, contrattiVenduti); //trovo la posizione del contratto
+            }
+            else { //ricerca contatto per numero di telefono
+                /* richiesta inserimento dati input */
+                System.out.println("Inserisci il numero di telefono: ");
+                telefono=keyboard.nextLine();
+
+                pos=trovaTel(telefono, vet, contrattiVenduti); //trovo la posizione del contatto
+            }
+            /* controllo se il valore ritornato è
+            * effettivamente una posizione */
             if(pos>=0)
                 return pos; //ritorno il vettore di contratti nella posizione trovata
         }
