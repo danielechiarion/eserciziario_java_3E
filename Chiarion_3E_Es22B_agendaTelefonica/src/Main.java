@@ -86,7 +86,7 @@ public class Main {
                      * -1, quindi se il contratto esiste */
                     if(posContatto>=0){
                         int sceltaTipologia=sceltaTipologia(keyboard); //ricerca valore
-                        gestore[posContatto].tipo=tipoContratto.valueOf(tipologia[sceltaTipologia]); //assegnazione valore
+                        gestore[posContatto].setTipo(tipoContratto.valueOf(tipologia[sceltaTipologia])); //assegnazione valore
                     }
                     else if(contrattiVenduti>0)
                         System.out.println("Contratto non trovato");
