@@ -5,7 +5,10 @@ public class Main {
     /* variabili e vettori per
      * menu della tipologia del telefono */
     public static String[] tipologia = {"MODALITA' TELEFONO","abitazione", "cellulare", "aziendale"};
+
     public static void main(String[] args) {
+        /* opzioni possibili per
+        * il gestore della vodafone */
         String[] operazioni = {"VODAFONE",
                 "Inserimento",
                 "Visualizzazione",
@@ -14,6 +17,7 @@ public class Main {
                 "Cambia contratto",
                 "Elimina contratto per nome e cognome",
                 "Elimina contratto per numero di telefono",
+                "Ordina rubrica",
                 "Fine"};
 
         final int nMax=3;
@@ -36,7 +40,7 @@ public class Main {
                         gestore[contrattiVenduti]=leggiPersona(true, keyboard); //assegno al contatto i valori inseriti
                         /* controllo se il contratto
                         * non è già stato creato */
-                        if(checkContratto(gestore[contrattiVenduti].nome, gestore[contrattiVenduti].cognome, gestore, contrattiVenduti)<0)
+                        if(checkContratto(gestore[contrattiVenduti].getNome(), gestore[contrattiVenduti].getCognome(), gestore, contrattiVenduti)<0)
                             contrattiVenduti++; //incremento l'indice
                         /* altrimenti restituisco un messaggio */
                         else
@@ -71,7 +75,7 @@ public class Main {
                         numero di telefono */
                         System.out.println("Inserisci il nuovo numero di telefono: ");
                         String nuovoNumero = keyboard.next();
-                        gestore[posContatto].telefono=nuovoNumero; //sostuisco il nuovo numero
+                        gestore[posContatto].setTelefono(nuovoNumero); //sostuisco il nuovo numero
                     }else if(contrattiVenduti>0)
                         System.out.println("Contratto non trovato");
                     break;
@@ -104,6 +108,12 @@ public class Main {
                         System.out.println("Contatto eliminato con successo"); //output di operazione riuscita
                     }
                     break;
+                case 8:
+                    ClrScr();
+                    ordinaContatti(gestore, contrattiVenduti); //ordino vettore
+                    visualizzaContatti(gestore, contrattiVenduti); //visualizzo risultato in output
+                    Wait(5);
+                    break;
                 default:
                     ClrScr();
                     fine=false; //cambio valore booleano e esco dal ciclo
@@ -116,14 +126,18 @@ public class Main {
     /* metodo per prendere in input
      * il numero telefonico della persona */
     private static Contatto leggiPersona(boolean siTel, Scanner keyboard){
-        Contatto nuovoContatto = new Contatto(); //dichiarazione oggetto
+        /* dichiarazione variabili
+        * e assegnamento di valori di default */
+        String nome, cognome;
+        String telefono="//";
+        tipoContratto tipo = tipoContratto.undefined;
 
         /* input dati */
         ClrScr();
         System.out.println("Inserisci nome ");
-        nuovoContatto.nome=keyboard.nextLine();
+        nome=keyboard.nextLine();
         System.out.println("Inserisci cognome ");
-        nuovoContatto.cognome=keyboard.nextLine();
+        cognome=keyboard.nextLine();
 
         /* controllo se ha richiesto
          * l'inserimento del numero di telefono */
@@ -132,15 +146,13 @@ public class Main {
             /* input numero di telefono
              * e tipologia */
             System.out.println("Inserisci il numero di telefono");
-            nuovoContatto.telefono=keyboard.nextLine();
+            telefono=keyboard.nextLine();
 
-            nuovoContatto.tipo=tipoContratto.valueOf(tipologia[sceltaTipologia(keyboard)]);
+            tipo=tipoContratto.valueOf(tipologia[sceltaTipologia(keyboard)]);
         }
-        /* se non è previsto l'inserimento del telefono,
-         * assegnamolo a dei valori di default */
 
 
-        return nuovoContatto;
+        return new Contatto(nome, cognome, telefono, tipo); //ritorno il nuovo oggetto creato
     }
 
     /* metodo che sceglie la tipologia
@@ -181,7 +193,7 @@ public class Main {
         {
             /* se un contratto corrisponde
             * a quello inserito, ritorno il valore */
-            if(nome.equalsIgnoreCase(vet[i].nome.toLowerCase()) && cognome.equalsIgnoreCase(vet[i].cognome.toLowerCase()))
+            if(nome.equalsIgnoreCase(vet[i].getNome()) && cognome.equalsIgnoreCase(vet[i].getCognome()))
                 return i;
         }
 
@@ -196,7 +208,7 @@ public class Main {
         {
             /* se un contratto corrisponde
              * a quello inserito, ritorno il valore */
-            if(tel.equals(vet[i].telefono))
+            if(tel.equals(vet[i].getTelefono()))
                 return i;
         }
 
@@ -255,5 +267,28 @@ public class Main {
         * cancello semplicemente il valore */
         if(pos==contratti-1)
             gestore[pos]=null;
+    }
+
+    /* metodo che ordina i contatti
+    * utilizzando l'insertion sort */
+    private static void ordinaContatti(Contatto[] vet, int contrattiVenduti){
+        /* dichiarazione variabili per
+        * l'ordinamento */
+        Contatto temp; //variabile temporanea per il trasferimento dati
+
+        /* scorro tutti i valori */
+        for(int i=0;i<contrattiVenduti-1;i++){
+            for(int k=i+1; k<contrattiVenduti;k++){
+                /* inizialmente controllo i cognomi e
+                * trovo il minimo.
+                * Altrimenti verifico se, a parità di cognomi, ho nomi differenti */
+                if(vet[k].getCognome().compareToIgnoreCase(vet[i].getCognome())<0 || vet[k].getCognome().equalsIgnoreCase(vet[i].getCognome()) && vet[k].getNome().compareToIgnoreCase(vet[i].getNome())<0){
+                    /* scambio variabili */
+                    temp=vet[i]; //sposto il valore su una variabile temporanea
+                    vet[i]=vet[k]; //assegno il minimo
+                    vet[k]=temp; //sposto l'altro valore nel vettore
+                }
+            }
+        }
     }
 }
