@@ -1,6 +1,7 @@
 package tools;
 
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 public class utility {
     public static void ClrScr() {
@@ -10,34 +11,53 @@ public class utility {
             e.printStackTrace();
         }
     }
-    public static void Wait(int x)
-    {
-        try{
-            Thread.sleep(1000*x);
-        }catch(InterruptedException e)
-        {
+
+    public static void Wait(int x) {
+        try {
+            Thread.sleep(1000 * x);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-    public static int menu(String[] opzioni, Scanner keyboard)
-    {
+
+    public static int menu(String[] opzioni, Scanner keyboard) {
         int scelta;
 
         do {
             ClrScr();
-            System.out.println("=== "+opzioni[0]+" ===");
-            for(int i=1;i<opzioni.length;i++)
-            {
-                System.out.println("["+i+"]"+" "+opzioni[i]);
+            System.out.println("=== " + opzioni[0] + " ===");
+            for (int i = 1; i < opzioni.length; i++) {
+                System.out.println("[" + i + "]" + " " + opzioni[i]);
             }
-            scelta = Integer.parseInt(keyboard.nextLine());
-            if(scelta<1 || scelta>opzioni.length-1)
-            {
+            try {
+                scelta = Integer.parseInt(keyboard.nextLine());
+            }catch(Exception e){
+                scelta = Integer.parseInt(keyboard.next());
+                keyboard.nextLine();
+            }
+            if (scelta < 1 || scelta > opzioni.length - 1) {
                 System.out.println("Valore errato. Riprova");
                 Wait(3);
             }
-        }while(scelta<1 || scelta>opzioni.length-1);
+        } while (scelta < 1 || scelta > opzioni.length - 1);
 
         return scelta;
+    }
+
+    /* metodo che indica il messaggio di errore */
+    public static void messaggioErrore(int value) {
+        /* switch case per i messaggi di errore */
+        switch (value) {
+            case 1:
+                System.out.println("ERROR! Input out of range");
+                break;
+            case 2:
+                System.out.println("ERROR! Wrong domain");
+                break;
+            default:
+                System.out.println("");
+        }
+        Wait(3);
+        ClrScr();
     }
 }

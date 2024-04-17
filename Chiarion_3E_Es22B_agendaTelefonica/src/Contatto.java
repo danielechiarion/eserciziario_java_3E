@@ -35,6 +35,7 @@ public class Contatto {
 	public String getTelefono(){
 		return this.telefono;
 	}
+	public double getRicarica(){ return this.ricarica; }
 	
 	public void setNome(String nome){
 		this.nome=nome;
@@ -45,4 +46,6 @@ public class Contatto {
 	public void setTipo(tipoContratto tipo){
 		this.tipo=tipo;
 	}
+	public void setTelefono(String telefono){ this.telefono=telefono; }
+	public void setRicarica(double importo){ this.ricarica += importo; }
 }

@@ -1,6 +1,8 @@
 import static tools.utility.*;
 
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
+
 public class Main {
     /* variabili e vettori per
      * menu della tipologia del telefono */
@@ -18,10 +20,13 @@ public class Main {
                 "Elimina contratto per nome e cognome",
                 "Elimina contratto per numero di telefono",
                 "Ordina rubrica",
+                "Effettua telefonata",
+                "Ricarica telefono",
                 "Fine"};
         
         /* dichiarazione variabili */
         final int nMax=3;
+        final double costoChiamata=1;
         int contrattiVenduti=0;
         int posContatto;
         int scelta;
@@ -117,6 +122,45 @@ public class Main {
                     ordinaContatti(gestore, contrattiVenduti); //ordino vettore
                     visualizzaContatti(gestore, contrattiVenduti); //visualizzo risultato in output
                     Wait(5);
+                    break;
+                case 9:
+                    posContatto=cercaContatto(gestore, contrattiVenduti, keyboard, false); //ricerca contatto
+
+                    System.out.println("Il costo per ogni chiamata e' di "+costoChiamata+"€"); //info costo chiamata
+                    /* se l'utente ha ancora contante disponibile,
+                    * effettuo la chiamata */
+                    if(contrattiVenduti>0 && gestore[posContatto].getRicarica()>=costoChiamata){
+                        gestore[posContatto].setRicarica(-costoChiamata); //sottrazione importo
+                        System.out.println("Il saldo rimasto e' di "+gestore[posContatto].getRicarica()+"€");
+                    }
+                    /* altrimenti restituisco un messaggio
+                    * di saldo insufficiente */
+                    else if(contrattiVenduti>0)
+                        System.out.println("Non hai saldo sufficiente per effettuare una chiamata. Effettua una ricarica");
+                    break;
+                case 10:
+                    boolean check; //valore booleano per controllare se il valore inserito e' corretto
+                    double importo=0; //valore per ricaricare la carta
+
+                    posContatto=cercaContatto(gestore, contrattiVenduti, keyboard, false); //ricerca contatto
+
+                    do {
+                        check=false;
+                        try{
+                            System.out.println("Di quanto vuoi ricaricare la carta?");
+                            importo = keyboard.nextDouble();
+                        }catch(Exception e){
+                            messaggioErrore(2);
+                            check=true;
+                        }
+                        if(!check && importo<0){
+                            messaggioErrore(1);
+                            check=true;
+                        }
+                    }while(check);
+
+                    gestore[posContatto].setRicarica(importo); //impostazione saldo
+                    System.out.println("Il saldo attuale del tuo telefono e': "+gestore[posContatto].getRicarica()+"€"); //output risultati
                     break;
                 default:
                     ClrScr();
