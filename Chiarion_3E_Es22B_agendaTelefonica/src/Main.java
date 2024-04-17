@@ -19,14 +19,15 @@ public class Main {
                 "Elimina contratto per numero di telefono",
                 "Ordina rubrica",
                 "Fine"};
-
+        
+        /* dichiarazione variabili */
         final int nMax=3;
         int contrattiVenduti=0;
         int posContatto;
         int scelta;
-        Contatto[] gestore = new Contatto[nMax];
-
-        Scanner keyboard = new Scanner(System.in);
+        Contatto[] gestore = new Contatto[nMax]; //vettore di contratti
+ 
+        Scanner keyboard = new Scanner(System.in); //creazione scanner
 
         boolean fine=true;
         do {
@@ -107,6 +108,9 @@ public class Main {
                         contrattiVenduti--; //diminuisco il numero di contratti vendutiù
                         System.out.println("Contatto eliminato con successo"); //output di operazione riuscita
                     }
+                    /* possibile messaggio di errore */
+                    else
+                        System.out.println("Contatto non trovato");
                     break;
                 case 8:
                     ClrScr();
