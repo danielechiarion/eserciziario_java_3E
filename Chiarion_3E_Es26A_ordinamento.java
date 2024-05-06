@@ -1,4 +1,4 @@
-public class Chiarion_Es26A_ordinamento {
+public class Chiarion_3E_Es26A_ordinamento {
     public static void main(String[] args) {
         /* creazione array di numeri
         * da ordinare */
