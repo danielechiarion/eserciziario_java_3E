@@ -1,3 +1,8 @@
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import static tools.jsonFile.*;
+
 enum tipoContratto{abitazione, cellulare, aziendale, undefined};
 
 public class Contatto {
@@ -24,7 +29,13 @@ public class Contatto {
 
         return String.format("Nome: %s\tCognome: %s\nTelefono: %s,\ttipo: %s\n%.2f€\n", nome, cognome, telefono, tipo.toString(), ricarica);
     }
-	
+
+	public Contatto[] getLista(String filePath){
+		JSONArray list = readDataJSON(filePath);
+
+		for(int )
+	}
+
 	/* metod get/set */
 	public String getNome(){
 		return this.nome;

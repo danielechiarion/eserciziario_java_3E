@@ -1,7 +1,9 @@
 import static tools.utility.*;
+import static tools.jsonFile.*;
 
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
+import org.json.*;
 
 public class Main {
     /* variabili e vettori per
@@ -22,7 +24,10 @@ public class Main {
                 "Ordina rubrica",
                 "Effettua telefonata",
                 "Ricarica telefono",
+                "Salva dati",
                 "Fine"};
+
+        final String filePath = "data/rubrica.json"; //stringa per l'indirizzo del file
         
         /* dichiarazione variabili */
         final int nMax=3;
@@ -161,6 +166,9 @@ public class Main {
 
                     gestore[posContatto].setRicarica(importo); //impostazione saldo
                     System.out.println("Il saldo attuale del tuo telefono e': "+gestore[posContatto].getRicarica()+"€"); //output risultati
+                    break;
+                case 11:
+                    System.out.println("Dati salvati con successo");
                     break;
                 default:
                     ClrScr();
@@ -338,5 +346,12 @@ public class Main {
                 }
             }
         }
+    }
+
+    /* metodo per leggere i dati salvati su un file esterno */
+    private static void leggiDati(Contatto[] vet, String filePath){
+        JSONArray contenuto = readDataJSON(filePath);
+
+
     }
 }
