@@ -24,7 +24,6 @@ public class Main {
                 "Ordina rubrica",
                 "Effettua telefonata",
                 "Ricarica telefono",
-                "Salva dati",
                 "Fine"};
 
         final String filePath = "data/rubrica.json"; //stringa per l'indirizzo del file
@@ -32,10 +31,21 @@ public class Main {
         /* dichiarazione variabili */
         final int nMax=3;
         final double costoChiamata=1;
-        int contrattiVenduti=0;
+        int contrattiVenduti;
         int posContatto;
         int scelta;
         Contatto[] gestore = new Contatto[nMax]; //vettore di contratti
+
+        /* provo a vedere se il file è esistente,
+        * altrimenti lo salvo e assegno ai contratti venduti
+        * un valore pari a 0 */
+        try{
+            gestore=Contatto.getLista(filePath, nMax);
+            contrattiVenduti=contaContratti(gestore);
+        }catch(Exception e){
+            createNewFile(filePath);
+            contrattiVenduti=0;
+        }
  
         Scanner keyboard = new Scanner(System.in); //creazione scanner
 
@@ -167,10 +177,8 @@ public class Main {
                     gestore[posContatto].setRicarica(importo); //impostazione saldo
                     System.out.println("Il saldo attuale del tuo telefono e': "+gestore[posContatto].getRicarica()+"€"); //output risultati
                     break;
-                case 11:
-                    System.out.println("Dati salvati con successo");
-                    break;
                 default:
+                    rewriteFileJSON(filePath, Contatto.convertToJSON(gestore, contrattiVenduti));
                     ClrScr();
                     fine=false; //cambio valore booleano e esco dal ciclo
                     System.out.println("Fine programma");
@@ -353,5 +361,15 @@ public class Main {
         JSONArray contenuto = readDataJSON(filePath);
 
 
+    }
+
+    /* metodo che conta quanti contratti sono stati già fatti */
+    private static int contaContratti(Contatto[] gestore){
+        int contatore=0;
+
+        for(int i=0;i<gestore.length && gestore[i]!=null;i++)
+            contatore++;
+
+        return contatore;
     }
 }

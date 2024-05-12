@@ -4,6 +4,8 @@ import org.json.*;
 import java.io.*;
 import java.nio.file.*;
 
+
+
 /* classe per gestire file json  */
 public class jsonFile {
     /**
@@ -49,5 +51,33 @@ public class jsonFile {
         /* trasforming string into an array */
         vet = new JSONArray(content);
         return vet;
+    }
+
+    /* Metodo per creare un nuovo file utilizzando il percorso */
+    public static void createNewFile(String path) {
+        Path file = Paths.get(path);
+
+        if(Files.exists(file))
+            return;
+
+        String[] pathSection = path.split("/");
+
+        // Definisci il percorso della cartella "data"
+        Path cartellaData = Paths.get(pathSection[pathSection.length-2]);
+
+        try {
+            // Crea la cartella "data" se non esiste già
+            if (!Files.exists(cartellaData)) {
+                Files.createDirectory(cartellaData);
+            }
+
+            // Definisci il percorso del nuovo file nella cartella "data"
+            Path filePath = cartellaData.resolve(pathSection[pathSection.length-1]);
+
+            // Crea il nuovo file
+            Files.createFile(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
