@@ -134,7 +134,7 @@ public class Main {
                     break;
                 case 8:
                     ClrScr();
-                    ordinaContatti(gestore, contrattiVenduti); //ordino vettore
+                    int[] copia = copiaArrayOrdinata(gestore, contrattiVenduti); //ordino vettore
                     visualizzaContatti(gestore, contrattiVenduti); //visualizzo risultato in output
                     Wait(5);
                     break;
@@ -333,35 +333,18 @@ public class Main {
             gestore[pos]=null;
     }
 
-    /* metodo che ordina i contatti
-    * utilizzando l'insertion sort */
-    private static void ordinaContatti(Contatto[] vet, int contrattiVenduti){
-        /* dichiarazione variabili per
-        * l'ordinamento */
-        Contatto temp; //variabile temporanea per il trasferimento dati
+    /* metodo che ordina i contatti,
+    * generando una copia del vettore e restituendola ordinata */
+    private static int[] copiaArrayOrdinata(Contatto[] vet, int contrattiVenduti){
+        /* creazione di una copia dell'array */
+        int[] copia = new int[vet.length];
+        System.arraycopy(vet, 0, copia, 0, contrattiVenduti);
 
-        /* scorro tutti i valori */
-        for(int i=0;i<contrattiVenduti-1;i++){
-            for(int k=i+1; k<contrattiVenduti;k++){
-                /* inizialmente controllo i cognomi e
-                * trovo il minimo.
-                * Altrimenti verifico se, a parità di cognomi, ho nomi differenti */
-                if(vet[k].getCognome().compareToIgnoreCase(vet[i].getCognome())<0 || vet[k].getCognome().equalsIgnoreCase(vet[i].getCognome()) && vet[k].getNome().compareToIgnoreCase(vet[i].getNome())<0){
-                    /* scambio variabili */
-                    temp=vet[i]; //sposto il valore su una variabile temporanea
-                    vet[i]=vet[k]; //assegno il minimo
-                    vet[k]=temp; //sposto l'altro valore nel vettore
-                }
-            }
-        }
+        ordinamento.ordinaSelection(vet, contrattiVenduti); //ordina una copia dell'array ordinato
+
+        return copia; //ritorna una copia dell'array ordinato
     }
 
-    /* metodo per leggere i dati salvati su un file esterno */
-    private static void leggiDati(Contatto[] vet, String filePath){
-        JSONArray contenuto = readDataJSON(filePath);
-
-
-    }
 
     /* metodo che conta quanti contratti sono stati già fatti */
     private static int contaContratti(Contatto[] gestore){
