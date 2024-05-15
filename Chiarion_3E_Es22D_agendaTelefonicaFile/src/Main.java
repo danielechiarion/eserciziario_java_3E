@@ -1,8 +1,8 @@
 import static tools.utility.*;
-import static tools.jsonFile.*;
 
 import java.util.Scanner;
-import java.util.concurrent.ExecutionException;
+import java.io.*;
+
 public class Main {
     /* variabili e vettori per
      * menu della tipologia del telefono */
@@ -33,6 +33,8 @@ public class Main {
         int posContatto;
         int scelta;
         Contatto[] gestore = new Contatto[nMax]; //vettore di contratti
+
+
  
         Scanner keyboard = new Scanner(System.in); //creazione scanner
 
@@ -165,7 +167,11 @@ public class Main {
                     System.out.println("Il saldo attuale del tuo telefono e': "+gestore[posContatto].getRicarica()+"€"); //output risultati
                     break;
                 default:
-                    ClrScr();
+                    try {
+                        fileSave.scriviFile(gestore,contrattiVenduti,"");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     fine=false; //cambio valore booleano e esco dal ciclo
                     System.out.println("Fine programma");
             }
