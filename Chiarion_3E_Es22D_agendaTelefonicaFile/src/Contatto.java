@@ -32,8 +32,8 @@ public class Contatto {
 	public String toString(){
 		/* ritorno il formato dei dati da salvare in CSV,
 		* con virgola come separatore */
-		return String.format("%s,%s,%s,%s",
-				this.nome, this.cognome, this.telefono, this.tipo.name());
+		return String.format("%s,%s,%s,%s, %f",
+				this.nome, this.cognome, this.telefono, this.tipo.name(), this.ricarica);
 	}
 
 	/* metod get/set */

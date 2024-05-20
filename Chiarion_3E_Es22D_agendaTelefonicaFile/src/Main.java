@@ -22,9 +22,11 @@ public class Main {
                 "Ordina rubrica",
                 "Effettua telefonata",
                 "Ricarica telefono",
+                "Salva file",
                 "Fine"};
 
         final String filePath = "data/rubrica.json"; //stringa per l'indirizzo del file
+        String fileCSV="archivio.csv"; //definizione percorso file CSV
         
         /* dichiarazione variabili */
         final int nMax=3;
@@ -34,8 +36,15 @@ public class Main {
         int scelta;
         Contatto[] gestore = new Contatto[nMax]; //vettore di contratti
 
+        /* provo la lettura del file,
+        * altrìmenti lascio i dati invariati */
+        try {
+            contrattiVenduti = fileSave.leggiFile(fileCSV, gestore);
+        } catch (IOException e){
+            System.out.println("Nessun dato ancora salvato");
+        }
 
- 
+
         Scanner keyboard = new Scanner(System.in); //creazione scanner
 
         boolean fine=true;
@@ -166,12 +175,14 @@ public class Main {
                     gestore[posContatto].setRicarica(importo); //impostazione saldo
                     System.out.println("Il saldo attuale del tuo telefono e': "+gestore[posContatto].getRicarica()+"€"); //output risultati
                     break;
-                default:
+                case 11:
                     try {
-                        fileSave.scriviFile(gestore,contrattiVenduti,"");
+                        fileSave.scriviFile(gestore,contrattiVenduti,fileCSV);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
+                    break;
+                default:
                     fine=false; //cambio valore booleano e esco dal ciclo
                     System.out.println("Fine programma");
             }
