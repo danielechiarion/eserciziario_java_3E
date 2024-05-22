@@ -43,9 +43,24 @@ public class fileSave {
         return contrattiVenduti; //ritorna il valore di contratti venduti
     }
 
+    /* metodo che permette di scrivere N contatti */
+    public static void scriviNContatti(String filePath, int numContatti, Contatto[] rubrica)throws IOException{
+        FileWriter out = new FileWriter(filePath);
+
+        out.write(numContatti+"\r\n"); //prima metto il numero di contatti
+
+        /* scrivo tutti gli altri valori */
+        for(int i=0;i<numContatti;i++)
+            out.write(rubrica[i].toString()+"\r\n");
+
+        /* svuoto il buffer e chiudo il file */
+        out.flush();
+        out.close();
+    }
+
     /* metodo che permette di leggere
     quanti un numero N di contatti */
-    public static Contatto[] leggiNContatti(int num, String fileName)throws IOException{
+    public static Contatto[] leggiNContatti(String fileName)throws IOException{
         /* dichiarazione lettori di file */
         FileReader in = new FileReader(fileName);
         Scanner scanner = new Scanner(in);
@@ -58,12 +73,13 @@ public class fileSave {
 
         /* leggo quante righe contiene il vettore */
         int dimensione = Integer.parseInt(scanner.nextLine()); //conto il numero di contatti disponibili
+        Contatto[] gestore = new Contatto[dimensione]; //creo array con la dimensione trovata
 
-        /* se la dimensione è maggiore del numero,
-        * il vettore avrà lunghezza numero, altrimenti avrà lunghezza
-        * dimensione */
-
-        Contatto[] gestore = new Contatto[num]; //creo array
+        for(int i=0;i< gestore.length;i++){
+            vetAttributi = scanner.nextLine().split(","); //leggo i valori separati dalla virgola
+            gestore[i]=new Contatto(vetAttributi[0],vetAttributi[1], vetAttributi[2], tipoContratto.valueOf(vetAttributi[3]));
+            gestore[i].setRicarica(-gestore[i].getRicarica()+Double.parseDouble(vetAttributi[4]));
+        }
 
         return gestore;
     }

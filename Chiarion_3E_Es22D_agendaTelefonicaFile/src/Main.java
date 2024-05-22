@@ -26,22 +26,23 @@ public class Main {
                 "Fine"};
 
         final String filePath = "data/rubrica.json"; //stringa per l'indirizzo del file
-        String fileCSV="archivio.csv"; //definizione percorso file CSV
+        String fileCSV="albieri.csv"; //definizione percorso file CSV
         
         /* dichiarazione variabili */
-        final int nMax=3;
+        final int nMax=7;
         final double costoChiamata=1;
         int contrattiVenduti=0;
         int posContatto;
         int scelta;
-        Contatto[] gestore = new Contatto[nMax]; //vettore di contratti
+        Contatto[] gestore; //vettore di contratti
 
         /* provo la lettura del file,
         * altrìmenti lascio i dati invariati */
         try {
-            contrattiVenduti = fileSave.leggiFile(fileCSV, gestore);
+            gestore=fileSave.leggiNContatti(fileCSV);
+            contrattiVenduti=gestore.length;
         } catch (IOException e){
-            System.out.println("Nessun dato ancora salvato");
+            gestore = new Contatto[nMax];
         }
 
 
@@ -177,7 +178,7 @@ public class Main {
                     break;
                 case 11:
                     try {
-                        fileSave.scriviFile(gestore,contrattiVenduti,fileCSV);
+                        fileSave.scriviNContatti(fileCSV, contrattiVenduti, gestore);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
