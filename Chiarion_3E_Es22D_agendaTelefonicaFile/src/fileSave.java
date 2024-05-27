@@ -1,7 +1,7 @@
-import java.io.FileWriter;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
+
+import static tools.utility.menu;
 
 public class fileSave {
     /* metodo che scrive su file CSV */
@@ -13,6 +13,18 @@ public class fileSave {
 
         out.flush(); //svuota il buffer
         out.close(); //chiude il file
+    }
+
+    /* metodo che scrivi i file utilizzando
+    * l'append */
+    public static void appendFile(Contatto elemento, String filePath)throws IOException{
+        FileWriter out = new FileWriter(filePath, true); //append di un file
+
+        out.append(elemento.toString()); //aggiungo l'elemento in coda
+
+        /* svuoto il buffer e chiudo e il file */
+        out.flush();
+        out.close();
     }
 
     /* metodo che legge da file CSV
@@ -82,5 +94,52 @@ public class fileSave {
         }
 
         return gestore;
+    }
+
+   /* public static String[] cercaFileDirectory(String percorso, String estensione){
+        File directory = new File(percorso); //creo la directory
+        File[] list = directory.listFiles(); //trova la lista dei file
+
+        /* conto quanti file hanno l'estensione indicata */
+        /*int cont=0;
+
+        for(File thisFile : list){
+            if(thisFile.getPath().substring(thisFile.getPath().length()-estensione.length(), thisFile.getPath().length()-1).equals(estensione)) //se la parte finale corrisponde all'estensione inserita
+                cont++; //aumento il contatore
+        }
+    } */
+
+    /* metodo che legge l'elenco di file
+    * visibili in formato CSV, ritornando la serie di percorsi */
+    public static String[] leggiFileDirectory(){
+        String userDirectoryPath = System.getProperty("user.dir");
+        String[] listaFile=null;
+
+        File dir = new File(userDirectoryPath); //creo la directory con il percorso
+        if(dir.isDirectory()){
+            listaFile=dir.list(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".csv");
+                }
+            }); //lista dei file inseriti
+        }
+
+        return listaFile; //ritorno la lista di percorso dei file
+    }
+
+    /* metodo che permette la scelta dei file
+    * per il salvataggio */
+    public static String scegliFile(String[] listaFile, Scanner keyboard){
+        int scelta; //variabile per la scelta
+
+        String[] listaCSV = new String[listaFile.length+1];
+        /* copio tutti i valori */
+        listaCSV[0] = "LISTA FILE CSV";
+        for(int i=0;i<listaFile.length;i++)
+            listaCSV[i+1]=listaFile[i];
+        scelta = menu(listaCSV, keyboard);
+
+        return listaCSV[scelta]; //ritorno la stringa con il percorso
     }
 }

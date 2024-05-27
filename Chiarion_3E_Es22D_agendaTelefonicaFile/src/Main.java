@@ -23,10 +23,12 @@ public class Main {
                 "Effettua telefonata",
                 "Ricarica telefono",
                 "Salva file",
+                "Importa da file",
                 "Fine"};
 
         final String filePath = "data/rubrica.json"; //stringa per l'indirizzo del file
         String fileCSV="albieri.csv"; //definizione percorso file CSV
+        String[] listaFile = null; //creo vettore per la lista dei file
         
         /* dichiarazione variabili */
         final int nMax=7;
@@ -34,17 +36,8 @@ public class Main {
         int contrattiVenduti=0;
         int posContatto;
         int scelta;
-        Contatto[] gestore; //vettore di contratti
-
-        /* provo la lettura del file,
-        * altrìmenti lascio i dati invariati */
-        try {
-            gestore=fileSave.leggiNContatti(fileCSV);
-            contrattiVenduti=gestore.length;
-        } catch (IOException e){
-            gestore = new Contatto[nMax];
-        }
-
+        Contatto[] gestore = new Contatto[nMax]; //vettore di contratti
+        String percorso;
 
         Scanner keyboard = new Scanner(System.in); //creazione scanner
 
@@ -56,7 +49,7 @@ public class Main {
                     ClrScr();
                     /* se ho un numero di contratti inferiore al limite,
                      * permetto il reinserimento del contratto */
-                    if(contrattiVenduti<nMax){
+                    if(contrattiVenduti< gestore.length){
                         gestore[contrattiVenduti]=leggiPersona(true, keyboard); //assegno al contatto i valori inseriti
                         /* controllo se il contratto
                         * non è già stato creato */
@@ -67,9 +60,25 @@ public class Main {
                             System.out.println("Contratto già esistente");
                     }
                     /* altrimenti restituisco un messaggio
-                     * di indisponibilità*/
-                    else
-                        System.out.println("Gestore telefonico pieno. Non è più possibile inserire numeri");
+                     * di indisponibilità, quindi
+                     * chiedo se vuole salvarlo su file e
+                     * e quindi recuperare il dato */
+                    else{
+                        System.out.println("Gestore telefonico pieno. Vuoi inserire un nuovo contatto? Digita SI per continuare");
+                        String risposta = keyboard.next().toUpperCase();
+                        keyboard.nextLine();
+                        if(risposta.equals("SI")){
+                            Contatto contatto = leggiPersona(true, keyboard); //creo contatto
+
+                            /* ricavo il percorso e poi scrivo su file */
+                            percorso = fileSave.scegliFile(fileSave.leggiFileDirectory(), keyboard);
+                            try {
+                                fileSave.appendFile(contatto, percorso);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
                     break;
                 case 2:
                     ClrScr();
@@ -177,8 +186,24 @@ public class Main {
                     System.out.println("Il saldo attuale del tuo telefono e': "+gestore[posContatto].getRicarica()+"€"); //output risultati
                     break;
                 case 11:
+                    /* richiede inserimento nome file */
+                    System.out.println("Inserisci nome file ");
+                    String nome = keyboard.next();
+
                     try {
-                        fileSave.scriviNContatti(fileCSV, contrattiVenduti, gestore);
+                        fileSave.scriviNContatti(nome, contrattiVenduti, gestore);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+                /* scelta file da cui prendere i dati */
+                case 12:
+                    percorso = fileSave.scegliFile(fileSave.leggiFileDirectory(), keyboard); //ricavo il percorso
+
+                    /* legge il contenuto del file */
+                    try {
+                        gestore = fileSave.leggiNContatti(percorso);
+                        contrattiVenduti=gestore.length;
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
