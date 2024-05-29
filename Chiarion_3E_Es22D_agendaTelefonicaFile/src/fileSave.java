@@ -20,7 +20,7 @@ public class fileSave {
     public static void appendFile(Contatto elemento, String filePath)throws IOException{
         FileWriter out = new FileWriter(filePath, true); //append di un file
 
-        out.append(elemento.toString()); //aggiungo l'elemento in coda
+        out.append(elemento.toString()+"\r\t"); //aggiungo l'elemento in coda
 
         /* svuoto il buffer e chiudo e il file */
         out.flush();
@@ -62,7 +62,7 @@ public class fileSave {
         out.write(numContatti+"\r\n"); //prima metto il numero di contatti
 
         /* scrivo tutti gli altri valori */
-        for(int i=0;i<numContatti;i++)
+        for(int i=0;i<numContatti && i<rubrica.length;i++)
             out.write(rubrica[i].toString()+"\r\n");
 
         /* svuoto il buffer e chiudo il file */
@@ -84,10 +84,13 @@ public class fileSave {
 
 
         /* leggo quante righe contiene il vettore */
-        int dimensione = Integer.parseInt(scanner.nextLine()); //conto il numero di contatti disponibili
+        int dimensione = Integer.parseInt(scanner.nextLine());
+        if(dimensione<0)
+            return null;
+
         Contatto[] gestore = new Contatto[dimensione]; //creo array con la dimensione trovata
 
-        for(int i=0;i< gestore.length;i++){
+        for(int i=0;i<dimensione;i++){
             vetAttributi = scanner.nextLine().split(","); //leggo i valori separati dalla virgola
             gestore[i]=new Contatto(vetAttributi[0],vetAttributi[1], vetAttributi[2], tipoContratto.valueOf(vetAttributi[3]));
             gestore[i].setRicarica(-gestore[i].getRicarica()+Double.parseDouble(vetAttributi[4]));
@@ -108,6 +111,7 @@ public class fileSave {
                 cont++; //aumento il contatore
         }
     } */
+
 
     /* metodo che legge l'elenco di file
     * visibili in formato CSV, ritornando la serie di percorsi */

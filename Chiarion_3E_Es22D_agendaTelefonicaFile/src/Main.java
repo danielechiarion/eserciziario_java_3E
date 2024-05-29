@@ -22,6 +22,8 @@ public class Main {
                 "Ordina rubrica",
                 "Effettua telefonata",
                 "Ricarica telefono",
+                "Chiama",
+                "Registro chiamate",
                 "Salva file",
                 "Importa da file",
                 "Fine"};
@@ -37,6 +39,7 @@ public class Main {
         int posContatto;
         int scelta;
         Contatto[] gestore = new Contatto[nMax]; //vettore di contratti
+        Chiamata[] registroChiamate = null;
         String percorso;
 
         Scanner keyboard = new Scanner(System.in); //creazione scanner
@@ -74,6 +77,15 @@ public class Main {
                             percorso = fileSave.scegliFile(fileSave.leggiFileDirectory(), keyboard);
                             try {
                                 fileSave.appendFile(contatto, percorso);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+
+                            /* alla fine ricavo ogni volta l'array di contatti */
+                            /* legge il contenuto del file */
+                            try {
+                                fileSave.scriviNContatti(percorso, contrattiVenduti+1, gestore); //riscrivo il file con la dimensione
+                                fileSave.appendFile(contatto, percorso); //aggiungo in coda l'ultimo elemento
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
@@ -186,6 +198,16 @@ public class Main {
                     System.out.println("Il saldo attuale del tuo telefono e': "+gestore[posContatto].getRicarica()+"€"); //output risultati
                     break;
                 case 11:
+                     Chiamata chiamata=effettuaChiamata(gestore, contrattiVenduti, keyboard);
+                     if(chiamata!=null){
+                         registroChiamate=aggiungiPosArray(registroChiamate);
+                         registroChiamate[registroChiamate.length-1]=chiamata;
+                     }
+                    break;
+                case 12:
+                    visualizzaChiamate(gestore, contrattiVenduti, registroChiamate, keyboard);
+                    break;
+                case 13:
                     /* richiede inserimento nome file */
                     System.out.println("Inserisci nome file ");
                     String nome = keyboard.next();
@@ -195,9 +217,15 @@ public class Main {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
+
+                    /* salvo anche il registro chiamate se non è null
+                    * in un file specifico */
+                    if(registroChiamate!=null){
+
+                    }
                     break;
                 /* scelta file da cui prendere i dati */
-                case 12:
+                case 14:
                     percorso = fileSave.scegliFile(fileSave.leggiFileDirectory(), keyboard); //ricavo il percorso
 
                     /* legge il contenuto del file */
@@ -362,6 +390,45 @@ public class Main {
             gestore[pos]=null;
     }
 
+    /* metoodo che effettua una chiamata e lo aggiunge
+    * all'array */
+    private static Chiamata effettuaChiamata(Contatto[] rubrica, int contrattiVenduti, Scanner scanner){
+        int pos = cercaContatto(rubrica, contrattiVenduti, scanner, false); //effettuo ricerca per nome e cognome
+
+        /* vedo se è stato trovato il contatto,
+        * altrimenti restituisco un messaggio di errore */
+        if(pos<0){
+            System.out.println("Contatto non trovato");
+            return null;
+        }
+
+        /* altrimenti creo la chiamata e la visualizzo */
+        Chiamata chiamata = new Chiamata(rubrica[pos].getTelefono());
+        System.out.println(chiamata.toString());
+
+        return chiamata;
+    }
+
+    /* metodo che visualizza il registro chiamate di un
+    * contatto specifico */
+    public static void visualizzaChiamate(Contatto[] rubrica, int contrattiVenduti, Chiamata[] registro, Scanner scanner){
+        int pos = cercaContatto(rubrica, contrattiVenduti, scanner, true); //ricerco il contatto per telefono
+
+        /* controllo se il contatto è stato effettivamente trovato,
+        * altrimenti restituisco un messaggio di errore */
+        if(pos<0){
+            System.out.println("Nessun contatto trovato");
+            return;
+        }
+
+        /* se il contatto è stato trovato mostro tutti
+        * i contatti che hanno lo stesso numero di telefono */
+        for(int i=0;i<registro.length;i++){
+            if(registro[i].numero.equals(rubrica[pos].getTelefono()))
+                System.out.println(registro[i].toString());
+        }
+    }
+
     /* metodo che ordina i contatti,
     * generando una copia del vettore e restituendola ordinata */
     private static int[] copiaArrayOrdinata(Contatto[] vet, int contrattiVenduti){
@@ -383,5 +450,21 @@ public class Main {
             contatore++;
 
         return contatore;
+    }
+
+    /* metodo che aggiunge una posizione ad un array */
+    public static Chiamata[] aggiungiPosArray(Chiamata[] array){
+        /* se l'array è nullo ritorno un vettore
+         * con posizione uno */
+        if(array==null)
+            return new Chiamata[1];
+
+        /* altrimenti creo un nuovo array dove ha
+         * lunghezza maggiore di 1
+         * e dovo copio gli altri dati presenti */
+        Chiamata[] array2 = new Chiamata[array.length+1];
+        System.arraycopy(array, 0, array2, 0, array.length);
+
+        return array2; //ritorno il nuovo array
     }
 }
