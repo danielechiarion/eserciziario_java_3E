@@ -17,10 +17,10 @@ public class fileSave {
 
     /* metodo che scrivi i file utilizzando
     * l'append */
-    public static void appendFile(Contatto elemento, String filePath)throws IOException{
+    public static void appendFile(String elemento, String filePath)throws IOException{
         FileWriter out = new FileWriter(filePath, true); //append di un file
 
-        out.append(elemento.toString()+"\r\t"); //aggiungo l'elemento in coda
+        out.append(elemento+"\r\t"); //aggiungo l'elemento in coda
 
         /* svuoto il buffer e chiudo e il file */
         out.flush();
@@ -115,7 +115,7 @@ public class fileSave {
 
     /* metodo che legge l'elenco di file
     * visibili in formato CSV, ritornando la serie di percorsi */
-    public static String[] leggiFileDirectory(){
+    public static String[] leggiFileDirectory(String nameException){
         String userDirectoryPath = System.getProperty("user.dir");
         String[] listaFile=null;
 
@@ -124,7 +124,9 @@ public class fileSave {
             listaFile=dir.list(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String name) {
-                    return name.endsWith(".csv");
+                    if(!name.startsWith(nameException) && name.endsWith(".csv"))
+                        return true;
+                    return false;
                 }
             }); //lista dei file inseriti
         }
@@ -145,5 +147,28 @@ public class fileSave {
         scelta = menu(listaCSV, keyboard);
 
         return listaCSV[scelta]; //ritorno la stringa con il percorso
+    }
+
+    /* metodo per contare le righe di un file CSV,
+    * senza esclusione dell'intestazione.
+    * Saranno poi i metodi a stabilire quante righe
+    * effettive sono da considerare */
+    public static int contaRigheCSV(String filePath)throws IOException{
+        /* creazione fileReader e scanner */
+        FileReader fileReader = new FileReader(filePath);
+        Scanner scanner = new Scanner(fileReader);
+
+        /* dichiarazione variabili */
+        int righe=0;
+
+        /* il contatore incrementa fin quando
+        * verrà visualizzata una riga successiva nel file */
+        while(scanner.hasNextLine()){
+            righe++;
+            scanner.nextLine(); //avanzo di una riga
+        }
+
+        scanner.close(); //chiudo lo scanner
+        return righe; //ritorno alla fine il numero di righe contate
     }
 }

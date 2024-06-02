@@ -28,9 +28,7 @@ public class Main {
                 "Importa da file",
                 "Fine"};
 
-        final String filePath = "data/rubrica.json"; //stringa per l'indirizzo del file
-        String fileCSV="albieri.csv"; //definizione percorso file CSV
-        String[] listaFile = null; //creo vettore per la lista dei file
+        final String inputCSVRegistro="registro_"; //indico la prima parte del nome del file obbligatoria per un file di registro
         
         /* dichiarazione variabili */
         final int nMax=7;
@@ -40,7 +38,7 @@ public class Main {
         int scelta;
         Contatto[] gestore = new Contatto[nMax]; //vettore di contratti
         Chiamata[] registroChiamate = null;
-        String percorso;
+        String percorso="";
 
         Scanner keyboard = new Scanner(System.in); //creazione scanner
 
@@ -74,9 +72,9 @@ public class Main {
                             Contatto contatto = leggiPersona(true, keyboard); //creo contatto
 
                             /* ricavo il percorso e poi scrivo su file */
-                            percorso = fileSave.scegliFile(fileSave.leggiFileDirectory(), keyboard);
+                            percorso = fileSave.scegliFile(fileSave.leggiFileDirectory(inputCSVRegistro), keyboard);
                             try {
-                                fileSave.appendFile(contatto, percorso);
+                                fileSave.appendFile(contatto.toString(), percorso);
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
@@ -85,7 +83,7 @@ public class Main {
                             /* legge il contenuto del file */
                             try {
                                 fileSave.scriviNContatti(percorso, contrattiVenduti+1, gestore); //riscrivo il file con la dimensione
-                                fileSave.appendFile(contatto, percorso); //aggiungo in coda l'ultimo elemento
+                                fileSave.appendFile(contatto.toString(), percorso); //aggiungo in coda l'ultimo elemento
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
@@ -164,7 +162,7 @@ public class Main {
                     System.out.println("Il costo per ogni chiamata e' di "+costoChiamata+"€"); //info costo chiamata
                     /* se l'utente ha ancora contante disponibile,
                     * effettuo la chiamata */
-                    if(contrattiVenduti>0 && gestore[posContatto].getRicarica()>=costoChiamata){
+                    if(contrattiVenduti>0  && posContatto>0 && gestore[posContatto].getRicarica()>=costoChiamata){
                         gestore[posContatto].setRicarica(-costoChiamata); //sottrazione importo
                         System.out.println("Il saldo rimasto e' di "+gestore[posContatto].getRicarica()+"€");
                     }
@@ -202,6 +200,11 @@ public class Main {
                      if(chiamata!=null){
                          registroChiamate=aggiungiPosArray(registroChiamate);
                          registroChiamate[registroChiamate.length-1]=chiamata;
+                         try {
+                             fileSave.appendFile(chiamata.toCSV(), inputCSVRegistro+percorso);
+                         } catch (IOException e) {
+                             throw new RuntimeException(e);
+                         }
                      }
                     break;
                 case 12:
@@ -217,16 +220,9 @@ public class Main {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-
-                    /* salvo anche il registro chiamate se non è null
-                    * in un file specifico */
-                    if(registroChiamate!=null){
-
-                    }
-                    break;
                 /* scelta file da cui prendere i dati */
                 case 14:
-                    percorso = fileSave.scegliFile(fileSave.leggiFileDirectory(), keyboard); //ricavo il percorso
+                    percorso = fileSave.scegliFile(fileSave.leggiFileDirectory(inputCSVRegistro), keyboard); //ricavo il percorso
 
                     /* legge il contenuto del file */
                     try {
@@ -234,6 +230,11 @@ public class Main {
                         contrattiVenduti=gestore.length;
                     } catch (IOException e) {
                         throw new RuntimeException(e);
+                    }
+                    try {
+                        registroChiamate=Chiamata.parseCSV(inputCSVRegistro+percorso); //prendo anche i dati delle chiamate
+                    } catch (IOException e) {
+                        registroChiamate=null;
                     }
                     break;
                 default:
@@ -420,11 +421,13 @@ public class Main {
             System.out.println("Nessun contatto trovato");
             return;
         }
+        if(registro==null)
+            return;
 
         /* se il contatto è stato trovato mostro tutti
         * i contatti che hanno lo stesso numero di telefono */
         for(int i=0;i<registro.length;i++){
-            if(registro[i].numero.equals(rubrica[pos].getTelefono()))
+            if(registro[i]!=null && registro[i].numero.equals(rubrica[pos].getTelefono()))
                 System.out.println(registro[i].toString());
         }
     }
